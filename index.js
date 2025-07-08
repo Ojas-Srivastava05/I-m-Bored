@@ -3,23 +3,25 @@ import bodyParser from "body-parser";
 import axios from "axios";
 import * as dotenv from 'dotenv'
 dotenv.config()
+import querystring from 'querystring';
 
 const app = express();
 const port = process.env.PORT || 3000; // Use environment port or 3000 as default
+const apiUrl = process.env.API_URL || "https://bored-api.appbrewery.com";
 
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", async (req, res) => {
   try {
-    const response = await axios.get("https://bored-api.appbrewery.com/random");
+    const response = await axios.get(`${apiUrl}/random`);
     const result = response.data;
     console.log(result);
     res.render("index.ejs", { data: result });
   } catch (error) {
     console.error("Failed to make request:", error.message);
     res.render("index.ejs", {
-      error: error.message,
+      error: "Failed to fetch activity. Please try again later.",
     });
   }
 });
@@ -29,15 +31,21 @@ app.post("/", async (req, res) => {
     console.log(req.body);
     const type = req.body.type;
     const participants = req.body.participants;
-    let apiUrl = "https://bored-api.appbrewery.com/filter?";
+    let filterUrl = `${apiUrl}/filter?`;
+    const queryParams = {};
+
     if (type) {
-      apiUrl += `type=${type}&`;
+      queryParams.type = type;
     }
     if (participants) {
-      apiUrl += `participants=${participants}&`;
+      queryParams.participants = participants;
     }
 
-    const response = await axios.get(apiUrl);
+    if (Object.keys(queryParams).length > 0) {
+      filterUrl += querystring.stringify(queryParams);
+    }
+
+    const response = await axios.get(filterUrl);
     const result = response.data;
     console.log(result);
 
