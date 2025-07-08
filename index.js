@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000; // Use environment port or 3000 as defaul
 const apiUrl = process.env.API_URL || "https://bored-api.appbrewery.com";
 
 app.use(express.static("public"));
+app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", async (req, res) => {
