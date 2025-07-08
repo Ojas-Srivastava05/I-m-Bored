@@ -13,7 +13,7 @@
   "description": "A simple app to find activities when you're bored.",
   "dependencies": {
     "axios": "^1.6.7",
-    "body-parser": "^1.24.6",
+    "body-parser": "^1.20.2",
     "dotenv": "^16.6.1",
     "ejs": "^3.1.9",
     "express": "^4.19.2"
